@@ -8,14 +8,20 @@ import {
   Post,
   Req,
   Res,
+  UseGuards,
 } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
-import { Request, Response } from 'express';
+import e, { Request, Response } from 'express';
 import { CustomResponse } from './http-exception/dto/custom-response.dto';
+import { AppService } from './app.service';
+import { JwtAuthGuard } from './guard/jwt-auth.guard';
 
 @Controller()
 export class AppController {
-  constructor(@Inject('AUTH') private readonly authClient: ClientProxy) {}
+  constructor(
+    @Inject('AUTH') private readonly authClient: ClientProxy,
+    private readonly service: AppService,
+  ) {}
 
   private readonly routeServiceMap: Record<string, ClientProxy> = {
     auth: this.authClient,
@@ -26,10 +32,20 @@ export class AppController {
     const response = await this.authClient
       .send({ cmd: 'login' }, body)
       .toPromise();
+    if (response.success) {
+      const payload = {
+        userId: response.data.id,
+        email: response.data.email,
+      };
+      const token = await this.service.generateToken(payload);
+      payload['token'] = token;
+      response.data = payload;
+    }
     return res.status(response.statusCode).json(response);
   }
 
   // Dynamic Routing
+  @UseGuards(JwtAuthGuard)
   @All(':service/*') // Catch-all dynamic route
   async handleDynamicRoutes(@Req() req: Request, @Res() res: Response) {
     const { method, body, params, url } = req;

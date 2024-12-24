@@ -1,6 +1,10 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { ClientsModule, Transport } from '@nestjs/microservices';
+import { AppService } from './app.service';
+import { JwtModule } from '@nestjs/jwt';
+import { env } from 'process';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
@@ -10,8 +14,16 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
         transport: Transport.TCP,
       },
     ]),
+    ConfigModule.forRoot({
+      envFilePath: '.env',
+    }),
+    JwtModule.register({
+      global: true,
+      secret: process.env.JWT_SECRET_KEY,
+      signOptions: { expiresIn: '1d' },
+    }),
   ],
   controllers: [AppController],
-  providers: [],
+  providers: [AppService],
 })
 export class AppModule {}
