@@ -44,6 +44,16 @@ export class AppController {
     return res.status(response.statusCode).json(response);
   }
 
+  @Get('routes')
+  async getAllRoutes() {
+    return this.routeServiceMap['auth'].send({ cmd: 'get_all_routes' }, {});
+  }
+
+  @Get('sync-feature')
+  async syncFeature() {
+    return this.routeServiceMap['auth'].send({ cmd: 'sync_feature' }, {});
+  }
+
   // Dynamic Routing
   @UseGuards(JwtAuthGuard)
   @All(':service/*') // Catch-all dynamic route
@@ -68,11 +78,13 @@ export class AppController {
     };
     try {
       // Send to the respective service
+      //FIXME: Delete console.log
       console.log('cmd', cmd);
       console.log('payload', payload);
       const response = await targetService.send({ cmd }, payload).toPromise();
       return res.status(response.statusCode).json(response);
     } catch (error) {
+      //FIXME: Delete console.log
       console.log('error', error);
       return res
         .status(error.statusCode || 500)
