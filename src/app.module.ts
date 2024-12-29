@@ -12,6 +12,18 @@ import { ConfigModule } from '@nestjs/config';
       {
         name: 'AUTH',
         transport: Transport.TCP,
+        options: {
+          port: 3000,
+        },
+      },
+    ]),
+    ClientsModule.register([
+      {
+        name: 'MASTER',
+        transport: Transport.TCP,
+        options: {
+          port: 3001,
+        },
       },
     ]),
     ConfigModule.forRoot({

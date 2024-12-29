@@ -20,11 +20,13 @@ import { JwtAuthGuard } from './guard/jwt-auth.guard';
 export class AppController {
   constructor(
     @Inject('AUTH') private readonly authClient: ClientProxy,
+    @Inject('MASTER') private readonly masterClient: ClientProxy,
     private readonly service: AppService,
   ) {}
 
   private readonly routeServiceMap: Record<string, ClientProxy> = {
     auth: this.authClient,
+    master: this.masterClient,
   };
 
   @Post('login')
@@ -70,9 +72,11 @@ export class AppController {
     }
 
     // Construct the cmd and payload
+    params.id = id;
+    params.subId = subId;
     const cmd = `${method.toLowerCase()}:${action.toLowerCase()}${id ? '/*' : ''}${subAction ? '/' + subAction.toLowerCase() : ''}${subId ? '/*' : ''}`;
     const payload = {
-      params: { id: id, subId: subId },
+      params,
       body,
       method,
     };
@@ -81,6 +85,8 @@ export class AppController {
       //FIXME: Delete console.log
       console.log('cmd', cmd);
       console.log('payload', payload);
+      console.log('targetService', targetService);
+      console.log('service', service);
       const response = await targetService.send({ cmd }, payload).toPromise();
       return res.status(response.statusCode).json(response);
     } catch (error) {

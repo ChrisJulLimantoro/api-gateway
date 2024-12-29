@@ -24,7 +24,8 @@ export class JwtAuthGuard implements CanActivate {
         secret: process.env.JWT_SECRET_KEY,
       });
 
-      request.user = payload;
+      // Attach the user object to the request.params
+      request.params.user = payload;
     } catch (e) {
       throw new UnauthorizedException('Unauthorized');
     }
