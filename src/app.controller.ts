@@ -48,7 +48,7 @@ export class AppController {
 
   @Get('routes')
   async getAllRoutes() {
-    return this.routeServiceMap['auth'].send({ cmd: 'get_all_routes' }, {});
+    return this.routeServiceMap['master'].send({ cmd: 'get_all_routes' }, {});
   }
 
   @Get('sync-feature')
@@ -85,8 +85,6 @@ export class AppController {
       //FIXME: Delete console.log
       console.log('cmd', cmd);
       console.log('payload', payload);
-      console.log('targetService', targetService);
-      console.log('service', service);
       const response = await targetService.send({ cmd }, payload).toPromise();
       return res.status(response.statusCode).json(response);
     } catch (error) {
