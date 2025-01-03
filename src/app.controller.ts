@@ -35,10 +35,7 @@ export class AppController {
       .send({ cmd: 'login' }, body)
       .toPromise();
     if (response.success) {
-      const payload = {
-        userId: response.data.id,
-        email: response.data.email,
-      };
+      const payload = response.data;
       const token = await this.service.generateToken(payload);
       payload['token'] = token;
       response.data = payload;
