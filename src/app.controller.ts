@@ -53,7 +53,10 @@ export class AppController {
 
   @Get('sync-feature')
   async syncFeature() {
-    return this.routeServiceMap['auth'].send({ cmd: 'sync_feature' }, {});
+    const data = await this.routeServiceMap['auth']
+      .send({ cmd: 'sync_feature' }, {})
+      .toPromise();
+    return data;
   }
 
   // Dynamic Routing
