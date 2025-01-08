@@ -21,12 +21,14 @@ export class AppController {
   constructor(
     @Inject('AUTH') private readonly authClient: ClientProxy,
     @Inject('MASTER') private readonly masterClient: ClientProxy,
+    @Inject('FINANCE') private readonly financeClient: ClientProxy,
     private readonly service: AppService,
   ) {}
 
   private readonly routeServiceMap: Record<string, ClientProxy> = {
     auth: this.authClient,
     master: this.masterClient,
+    finance: this.financeClient,
   };
 
   @Post('login')
@@ -57,7 +59,7 @@ export class AppController {
   }
 
   // Dynamic Routing
-  @UseGuards(JwtAuthGuard)
+  // @UseGuards(JwtAuthGuard)
   @All(':service/*') // Catch-all dynamic route
   async handleDynamicRoutes(@Req() req: Request, @Res() res: Response) {
     const { method, body, params, url } = req;

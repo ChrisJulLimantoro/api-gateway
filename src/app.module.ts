@@ -24,6 +24,14 @@ import { ConfigModule } from '@nestjs/config';
           port: 3001,
         },
       },
+
+      {
+        name: 'FINANCE',
+        transport: Transport.TCP,
+        options: {
+          port: 3002,
+        },
+      },
     ]),
     ConfigModule.forRoot({
       envFilePath: '.env',
