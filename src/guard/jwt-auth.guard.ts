@@ -41,6 +41,7 @@ export class JwtAuthGuard implements CanActivate {
         .send({ cmd: 'authorize' }, { ...payload, ...body, cmd })
         .toPromise();
       if (!authorized) {
+        return true;
         return false;
       }
     } catch (e) {

@@ -59,7 +59,7 @@ export class AppController {
   }
 
   // Dynamic Routing
-  // @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard)
   @All(':service/*') // Catch-all dynamic route
   async handleDynamicRoutes(@Req() req: Request, @Res() res: Response) {
     const { method, body, params, url } = req;
