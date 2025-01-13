@@ -32,6 +32,14 @@ import { ConfigModule } from '@nestjs/config';
           port: 3002,
         },
       },
+
+      {
+        name: 'INVENTORY',
+        transport: Transport.TCP,
+        options: {
+          port: 3003,
+        },
+      },
     ]),
     ConfigModule.forRoot({
       envFilePath: '.env',

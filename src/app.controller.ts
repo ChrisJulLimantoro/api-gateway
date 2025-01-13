@@ -22,6 +22,7 @@ export class AppController {
     @Inject('AUTH') private readonly authClient: ClientProxy,
     @Inject('MASTER') private readonly masterClient: ClientProxy,
     @Inject('FINANCE') private readonly financeClient: ClientProxy,
+    @Inject('INVENTORY') private readonly inventoryClient: ClientProxy,
     private readonly service: AppService,
   ) {}
 
@@ -29,6 +30,7 @@ export class AppController {
     auth: this.authClient,
     master: this.masterClient,
     finance: this.financeClient,
+    inventory: this.inventoryClient,
   };
 
   @Post('login')
@@ -47,7 +49,7 @@ export class AppController {
 
   @Get('routes')
   async getAllRoutes() {
-    return this.routeServiceMap['master'].send({ cmd: 'get_all_routes' }, {});
+    return this.routeServiceMap['inventory'].send({ cmd: 'get_routes' }, {});
   }
 
   @Get('sync-feature')
