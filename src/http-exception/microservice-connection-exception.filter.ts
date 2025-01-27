@@ -23,6 +23,7 @@ export class MicroserviceConnectionExceptionFilter implements ExceptionFilter {
       });
     } else {
       // Handle other errors or rethrow the exception
+      console.log('exception', exception);
       response.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
         statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
         message: 'An internal server error occurred.',

@@ -5,6 +5,7 @@ import { AppService } from './app.service';
 import { JwtModule } from '@nestjs/jwt';
 import { env } from 'process';
 import { ConfigModule } from '@nestjs/config';
+import { UploadModule } from './upload/upload.module';
 
 @Module({
   imports: [
@@ -49,6 +50,7 @@ import { ConfigModule } from '@nestjs/config';
       secret: process.env.JWT_SECRET_KEY,
       signOptions: { expiresIn: '1d' },
     }),
+    UploadModule,
   ],
   controllers: [AppController],
   providers: [AppService],

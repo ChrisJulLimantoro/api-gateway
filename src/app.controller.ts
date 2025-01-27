@@ -4,17 +4,20 @@ import {
   Controller,
   Get,
   Inject,
-  Param,
+  NotFoundException,
   Post,
   Req,
   Res,
   UseGuards,
 } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
-import e, { Request, Response } from 'express';
+import { Request, Response } from 'express';
 import { CustomResponse } from './http-exception/dto/custom-response.dto';
 import { AppService } from './app.service';
 import { JwtAuthGuard } from './guard/jwt-auth.guard';
+import { join } from 'path';
+import * as fs from 'fs';
+import { Console } from 'console';
 
 @Controller()
 export class AppController {
@@ -34,7 +37,7 @@ export class AppController {
   };
 
   @Post('login')
-  async login(@Body() body: any, @Res() res) {
+  async login(@Body() body: any, @Res() res, @Req() req) {
     const response = await this.authClient
       .send({ cmd: 'login' }, body)
       .toPromise();
@@ -60,11 +63,25 @@ export class AppController {
     return data;
   }
 
+  @Get('uploads/*')
+  async getStaticFile(@Req() req: Request, @Res() res: Response) {
+    console.log('Get Static File');
+    const filename = req.url.split('/').slice(2).join('/');
+    console.log('filename', filename);
+    // Your logic for serving images
+    const filePath = join(__dirname, '..', 'uploads', filename);
+    if (!fs.existsSync(filePath)) {
+      throw new NotFoundException('Image not found');
+    }
+    res.sendFile(filePath);
+  }
+
   // Dynamic Routing
   @UseGuards(JwtAuthGuard)
   @All(':service/*') // Catch-all dynamic route
   async handleDynamicRoutes(@Req() req: Request, @Res() res: Response) {
-    const { method, body, params, url } = req;
+    console.log('Dynamic Route');
+    const { method, params, url, body } = req;
     const [_, service, action, id, subAction, subId, ...remainingPath] =
       url.split('/');
     // Find the target service
