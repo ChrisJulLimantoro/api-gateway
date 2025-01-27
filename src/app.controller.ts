@@ -80,10 +80,10 @@ export class AppController {
   @UseGuards(JwtAuthGuard)
   @All(':service/*') // Catch-all dynamic route
   async handleDynamicRoutes(@Req() req: Request, @Res() res: Response) {
-    console.log('Dynamic Route');
-    const { method, params, url, body } = req;
+    const { method, body, params, url, query } = req;
+    const urlSanitized = url.split('?')[0];
     const [_, service, action, id, subAction, subId, ...remainingPath] =
-      url.split('/');
+      urlSanitized.split('/');
     // Find the target service
     const targetService = this.routeServiceMap[service];
     if (!targetService) {
@@ -96,9 +96,10 @@ export class AppController {
     params.id = id;
     params.subId = subId;
     const cmd = `${method.toLowerCase()}:${action.toLowerCase()}${id ? '/*' : ''}${subAction ? '/' + subAction.toLowerCase() : ''}${subId ? '/*' : ''}`;
+    const bodynew = { ...body, ...query };
     const payload = {
       params,
-      body,
+      body: bodynew,
       method,
     };
     try {
