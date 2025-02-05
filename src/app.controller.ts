@@ -26,6 +26,7 @@ export class AppController {
     @Inject('MASTER') private readonly masterClient: ClientProxy,
     @Inject('FINANCE') private readonly financeClient: ClientProxy,
     @Inject('INVENTORY') private readonly inventoryClient: ClientProxy,
+    @Inject('TRANSACTION') private readonly transactionClient: ClientProxy,
     private readonly service: AppService,
   ) {}
 
@@ -34,6 +35,7 @@ export class AppController {
     master: this.masterClient,
     finance: this.financeClient,
     inventory: this.inventoryClient,
+    transaction: this.transactionClient,
   };
 
   @Post('login')

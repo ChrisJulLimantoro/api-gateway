@@ -41,6 +41,14 @@ import { UploadModule } from './upload/upload.module';
           port: 3003,
         },
       },
+
+      {
+        name: 'TRANSACTION',
+        transport: Transport.TCP,
+        options: {
+          port: 3004,
+        },
+      },
     ]),
     ConfigModule.forRoot({
       envFilePath: '.env',
