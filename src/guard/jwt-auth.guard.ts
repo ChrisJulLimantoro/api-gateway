@@ -20,8 +20,8 @@ export class JwtAuthGuard implements CanActivate {
     const request = context.switchToHttp().getRequest();
     const token = this.extractTokenFromHeader(request);
     const [_, service, action, id, subAction, subId, ...remainingPath] =
-      request.url.split('/');
-    const { method, body } = request;
+      request.url.split('?')[0].split('/');
+    const { method, body, query } = request;
     const cmd = `${method.toLowerCase()}:${action.toLowerCase()}${id ? '/*' : ''}${subAction ? '/' + subAction.toLowerCase() : ''}${subId ? '/*' : ''}`;
 
     if (!token) {
@@ -38,13 +38,13 @@ export class JwtAuthGuard implements CanActivate {
 
       // Check if the user has the required role
       const authorized = await this.authClient
-        .send({ cmd: 'authorize' }, { ...payload, ...body, cmd })
+        .send({ cmd: 'authorize' }, { ...payload, ...body, ...query, cmd })
         .toPromise();
-      if (!authorized) {
-        return true;
-        return false;
-      }
+      request.query.owner_id = authorized.owner_id;
+      console.log('authorized', authorized.authorize);
+      return authorized.authorize;
     } catch (e) {
+      console.log('Error', e);
       throw new UnauthorizedException('Unauthorized');
     }
     return true;

@@ -6,8 +6,8 @@ export class HttpExceptionFilter<T> implements ExceptionFilter {
     console.log('Exception thrown', exception);
     const ctx = host.switchToHttp();
     const response = ctx.getResponse();
-    response.status(500).json({
-      statusCode: 500,
+    response.status(exception).json({
+      statusCode: exception,
       message: 'Internal server error',
       error: exception.toString(),
     });

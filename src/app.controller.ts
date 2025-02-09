@@ -99,7 +99,7 @@ export class AppController {
     params.subId = subId;
     const cmd = `${method.toLowerCase()}:${action.toLowerCase()}${id ? '/*' : ''}${subAction ? '/' + subAction.toLowerCase() : ''}${subId ? '/*' : ''}`;
 
-    const bodynew = { ...body, ...query };
+    const bodynew = { ...query, ...body };
     const payload = {
       params,
       body: bodynew,
