@@ -7,12 +7,12 @@ export class AppService {
   async generateToken(payload: {
     id: string;
     email: string;
-    company: string[];
-    store: string[];
+    is_owner: boolean;
   }) {
     const accessToken = await this.jwtService.signAsync({
       id: payload.id,
       email: payload.email,
+      is_owner: payload.is_owner,
       timestamp: new Date().toISOString(),
     });
 
