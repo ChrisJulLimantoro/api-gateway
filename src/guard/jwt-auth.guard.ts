@@ -35,10 +35,9 @@ export class JwtAuthGuard implements CanActivate {
 
       // Attach the user object to the request.params
       request.params.user = payload;
-
       // Check if the user has the required role
       const authorized = await this.authClient
-        .send({ cmd: 'authorize' }, { ...payload, ...body, ...query, cmd })
+        .send({ cmd: 'authorize' }, { user: payload, ...body, ...query, cmd })
         .toPromise();
       request.query.owner_id = authorized.owner_id;
       console.log('authorized', authorized.authorize);

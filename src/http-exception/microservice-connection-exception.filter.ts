@@ -21,6 +21,13 @@ export class MicroserviceConnectionExceptionFilter implements ExceptionFilter {
         timestamp: new Date().toISOString(),
         path: request.url,
       });
+    } else if (exception.message.includes('Forbidden resource')) {
+      response.status(HttpStatus.SERVICE_UNAVAILABLE).json({
+        statusCode: HttpStatus.SERVICE_UNAVAILABLE,
+        message: 'You are Forbidden to access this resource.',
+        timestamp: new Date().toISOString(),
+        path: request.url,
+      });
     } else {
       // Handle other errors or rethrow the exception
       console.log('exception', exception);
