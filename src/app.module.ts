@@ -6,6 +6,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { env } from 'process';
 import { ConfigModule } from '@nestjs/config';
 import { UploadModule } from './upload/upload.module';
+import { AdminModule } from './admin/admin.module';
 
 @Module({
   imports: [
@@ -59,6 +60,7 @@ import { UploadModule } from './upload/upload.module';
       signOptions: { expiresIn: '1d' },
     }),
     UploadModule,
+    AdminModule,
   ],
   controllers: [AppController],
   providers: [AppService],
