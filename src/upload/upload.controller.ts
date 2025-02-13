@@ -32,6 +32,24 @@ export class UploadController {
     return CustomResponse.success('File uploaded successfully', file);
   }
 
+  @Post('upload-payout')
+  @UseInterceptors(ImageFileInterceptor.getInterceptor('payout'))
+  uploadPayout(
+    @UploadedFile(
+      new FileValidationPipe({
+        maxSize: 2 * 1024 * 1024, //2mb
+        allowedMimes: ['image/jpeg', 'image/png', 'image/jpg'], // only allow JPG/JPEG and PNG
+      }),
+    )
+    file: Express.Multer.File,
+  ) {
+    console.log('file', file);
+    if (!file) {
+      return CustomResponse.error('Unknown Error occurred!', [], 400);
+    }
+    return CustomResponse.success('File uploaded successfully', file);
+  }
+
   @Post('upload-product')
   @UseInterceptors(ImageFileInterceptor.getInterceptor('product'))
   uploadProduct(

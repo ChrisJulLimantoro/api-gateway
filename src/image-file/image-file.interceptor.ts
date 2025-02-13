@@ -32,6 +32,7 @@ export class ImageFileInterceptor {
     const folderMapping: Record<string, string> = {
       logo: 'uploads/logo',
       product: 'uploads/product',
+      payout: 'uploads/payout',
     };
     return folderMapping[folder] || folderMapping.default;
   }
