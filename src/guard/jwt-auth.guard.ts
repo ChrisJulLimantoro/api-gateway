@@ -40,10 +40,11 @@ export class JwtAuthGuard implements CanActivate {
         .send({ cmd: 'authorize' }, { user: payload, ...body, ...query, cmd })
         .toPromise();
       request.query.owner_id = authorized.owner_id;
-      console.log('authorized', authorized.authorize);
       return authorized.authorize;
     } catch (e) {
-      console.log('Error', e);
+      if (e.name === 'TokenExpiredError') {
+        throw new UnauthorizedException('Token expired');
+      }
       throw new UnauthorizedException('Unauthorized');
     }
     return true;

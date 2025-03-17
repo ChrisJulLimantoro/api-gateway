@@ -28,6 +28,13 @@ export class MicroserviceConnectionExceptionFilter implements ExceptionFilter {
         timestamp: new Date().toISOString(),
         path: request.url,
       });
+    } else if (exception.message.includes('Token expired')) {
+      response.status(401).json({
+        statusCode: 401,
+        message: 'Token Expired',
+        timestamp: new Date().toISOString(),
+        path: request.url,
+      });
     } else {
       // Handle other errors or rethrow the exception
       console.log('exception', exception);

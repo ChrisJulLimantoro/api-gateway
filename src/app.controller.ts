@@ -52,6 +52,7 @@ export class AppController {
 
   @Post('login')
   async login(@Body() body: any, @Res() res, @Req() req) {
+    console.log('Print Login');
     const response = await this.authClient
       .send({ cmd: 'login' }, body)
       .toPromise();
