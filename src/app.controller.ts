@@ -27,6 +27,11 @@ export class AppController {
     @Inject('FINANCE') private readonly financeClient: ClientProxy,
     @Inject('INVENTORY') private readonly inventoryClient: ClientProxy,
     @Inject('TRANSACTION') private readonly transactionClient: ClientProxy,
+    
+    @Inject('INVENTORY_RMQ') private readonly inventoryRmqClient: ClientProxy,
+    @Inject('TRANSACTION_RMQ') private readonly transactionRmqClient: ClientProxy,
+    @Inject('FINANCE_RMQ') private readonly financeRmqClient: ClientProxy,
+    @Inject('AUTH_RMQ') private readonly authRmqClient: ClientProxy,
     private readonly service: AppService,
   ) {}
 
@@ -36,6 +41,13 @@ export class AppController {
     finance: this.financeClient,
     inventory: this.inventoryClient,
     transaction: this.transactionClient,
+  };
+
+  private readonly rmqServiceMap: Record<string, ClientProxy> = {
+    auth: this.authRmqClient, // vv
+    finance: this.financeRmqClient,
+    inventory: this.inventoryRmqClient, // vv
+    transaction: this.transactionRmqClient, // vv
   };
 
   @Post('login')
@@ -63,6 +75,69 @@ export class AppController {
       .send({ cmd: 'sync_feature' }, {})
       .toPromise();
     return data;
+  }
+
+  // Sync company
+  @Post('sync-company')
+  async syncCompany(@Body() body: any, @Res() res: Response) {
+    const payload = {
+      params: {},
+      body: {},
+      method: 'POST',
+    };
+    const response = await this.routeServiceMap['master']
+      .send({ cmd: 'get:company' }, payload)
+      .toPromise();
+    if (response.success) {
+      const companies = response.data;
+      for (const key in this.rmqServiceMap) {
+        if (Object.prototype.hasOwnProperty.call(this.rmqServiceMap, key)) {
+          try {
+            const client = this.rmqServiceMap[key];
+            const response = await client
+              .emit({ cmd: 'company_sync' }, companies)
+              .toPromise();
+            console.log('company created in',response);
+          } catch (error) {
+            console.log('error', error);
+            console.log('service', key);
+          }
+        }
+      }
+    }
+    console.log(response);
+    return res.status(response.statusCode).json(response);
+  }
+  // Sync store
+  @Post('sync-store')
+  async syncStore(@Body() body: any, @Res() res: Response) {
+    const payload = {
+      params: {},
+      body: {},
+      method: 'POST',
+    };
+    const response = await this.routeServiceMap['master']
+      .send({ cmd: 'get:store' }, payload)
+      .toPromise();
+    if (response.success) {
+      const stores = response.data;
+      for (const key in this.rmqServiceMap) {
+        if (Object.prototype.hasOwnProperty.call(this.rmqServiceMap, key)) {
+          try {
+            const client = this.rmqServiceMap[key];
+            const response = await client
+              .emit({ cmd: 'store_sync' }, stores)
+              .toPromise();
+            console.log('store created in',response);
+          } catch (error) {
+            console.log('error', error);
+            console.log('service', key);
+          }
+        }
+      }
+    }
+    console.log(response);
+    return res.status(response.statusCode).json(response);
   }
 
   @Get('uploads/*')
