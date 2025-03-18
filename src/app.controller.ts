@@ -79,6 +79,41 @@ export class AppController {
     res.sendFile(filePath);
   }
 
+  @Get('nota/*')
+  async getNota(@Req() req: Request, @Res() res: Response) {
+    try {
+      const id = req.params[0]; // Extract ID from wildcard route
+      if (!id) {
+        return res.status(400).json({ message: 'Transaction ID is required' });
+      }
+
+      // Send request to transaction service
+      const filePath: string = await this.transactionClient
+        .send({ cmd: 'get:transaction-nota/*' }, { params: { id } })
+        .toPromise();
+
+      if (!filePath || !fs.existsSync(filePath)) {
+        return res.status(404).json({ message: 'Nota file not found' });
+      }
+
+      // Send the file as a response
+      res.setHeader(
+        'Content-Disposition',
+        `attachment; filename=nota-${id}.pdf`,
+      );
+      res.setHeader('Content-Type', 'application/pdf');
+      res.sendFile(filePath, (err) => {
+        if (err) {
+          res.status(500).json({ message: 'Error sending file' });
+        }
+      });
+    } catch (error) {
+      res
+        .status(500)
+        .json({ message: 'Internal Server Error', error: error.message });
+    }
+  }
+
   // Dynamic Routing
   @UseGuards(JwtAuthGuard)
   @All(':service/*') // Catch-all dynamic route
