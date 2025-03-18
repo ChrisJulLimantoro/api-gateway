@@ -50,6 +50,61 @@ import { AdminModule } from './admin/admin.module';
           port: 3004,
         },
       },
+      {
+          name: 'MARKETPLACE_RMQ',
+          transport: Transport.RMQ,
+          options: {
+              urls: ['amqp://localhost:5672'],
+              queue: 'marketplace_service_queue',
+              queueOptions: {
+                  durable: true,
+              },
+          },
+      },
+      {
+          name: 'INVENTORY_RMQ',
+          transport: Transport.RMQ,
+          options: {
+              urls: ['amqp://localhost:5672'],
+              queue: 'inventory_service_queue',
+              queueOptions: {
+                  durable: true,
+              },
+          },
+      },
+      {
+          name: 'TRANSACTION_RMQ',
+          transport: Transport.RMQ,
+          options: {
+              urls: ['amqp://localhost:5672'],
+              queue: 'transaction_service_queue',
+              queueOptions: {
+                  durable: true,
+              },
+          },
+      },
+      {
+          name: 'FINANCE_RMQ',
+          transport: Transport.RMQ,
+          options: {
+              urls: ['amqp://localhost:5672'],
+              queue: 'finance_service_queue',
+              queueOptions: {
+                  durable: true,
+              },
+          },
+      },
+      {
+          name: 'AUTH_RMQ',
+          transport: Transport.RMQ,
+          options: {
+              urls: ['amqp://localhost:5672'],
+              queue: 'auth_service_queue',
+              queueOptions: {
+                  durable: true,
+              },
+          },
+      },
     ]),
     ConfigModule.forRoot({
       envFilePath: '.env',
