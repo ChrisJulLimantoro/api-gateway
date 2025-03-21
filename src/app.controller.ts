@@ -27,9 +27,10 @@ export class AppController {
     @Inject('FINANCE') private readonly financeClient: ClientProxy,
     @Inject('INVENTORY') private readonly inventoryClient: ClientProxy,
     @Inject('TRANSACTION') private readonly transactionClient: ClientProxy,
-    
+
     @Inject('INVENTORY_RMQ') private readonly inventoryRmqClient: ClientProxy,
-    @Inject('TRANSACTION_RMQ') private readonly transactionRmqClient: ClientProxy,
+    @Inject('TRANSACTION_RMQ')
+    private readonly transactionRmqClient: ClientProxy,
     @Inject('FINANCE_RMQ') private readonly financeRmqClient: ClientProxy,
     @Inject('AUTH_RMQ') private readonly authRmqClient: ClientProxy,
     private readonly service: AppService,
@@ -98,7 +99,7 @@ export class AppController {
             const response = await client
               .emit({ cmd: 'company_sync' }, companies)
               .toPromise();
-            console.log('company created in',response);
+            console.log('company created in', response);
           } catch (error) {
             console.log('error', error);
             console.log('service', key);
@@ -129,7 +130,7 @@ export class AppController {
             const response = await client
               .emit({ cmd: 'store_sync' }, stores)
               .toPromise();
-            console.log('store created in',response);
+            console.log('store created in', response);
           } catch (error) {
             console.log('error', error);
             console.log('service', key);
