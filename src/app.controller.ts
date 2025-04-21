@@ -167,6 +167,8 @@ export class AppController {
       const filePath: string = await this.transactionClient
         .send({ cmd: 'get:transaction-nota/*' }, { params: { id } })
         .toPromise();
+      
+      console.log('filePath', filePath);
 
       if (!filePath || !fs.existsSync(filePath)) {
         return res.status(404).json({ message: 'Nota file not found' });

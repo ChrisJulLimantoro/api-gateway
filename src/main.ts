@@ -26,6 +26,9 @@ async function bootstrap() {
   app.useGlobalFilters(new MicroserviceConnectionExceptionFilter());
   // app.useGlobalFilters(new HttpExceptionFilter());
 
-  await app.listen(process.env.PORT ?? 3000);
+  // await app.listen(process.env.PORT ?? 3000);
+  await app.listen(process.env.PORT ?? 3000, '0.0.0.0');
+  // console log where the server is running
+  console.log(`Server is running on ${await app.getUrl()}`);
 }
 bootstrap();
