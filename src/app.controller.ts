@@ -51,6 +51,11 @@ export class AppController {
     transaction: this.transactionRmqClient, // vv
   };
 
+  @Get('health')
+  async healthCheck() {
+    return CustomResponse.success('Service is running', null, 200);
+  }
+
   @Post('login')
   async login(@Body() body: any, @Res() res, @Req() req) {
     console.log('Print Login');
