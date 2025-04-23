@@ -15,6 +15,7 @@ import { AdminModule } from './admin/admin.module';
         name: 'AUTH',
         transport: Transport.TCP,
         options: {
+          host: process.env.AUTH_SERVICE_HOST ?? 'localhost',
           port: 3001,
         },
       },
@@ -23,6 +24,7 @@ import { AdminModule } from './admin/admin.module';
         name: 'MASTER',
         transport: Transport.TCP,
         options: {
+          host: process.env.MASTER_SERVICE_HOST ?? 'localhost',
           port: 3002,
         },
       },
@@ -31,6 +33,7 @@ import { AdminModule } from './admin/admin.module';
         name: 'FINANCE',
         transport: Transport.TCP,
         options: {
+          host: process.env.FINANCE_SERVICE_HOST ?? 'localhost',
           port: 3003,
         },
       },
@@ -39,6 +42,7 @@ import { AdminModule } from './admin/admin.module';
         name: 'INVENTORY',
         transport: Transport.TCP,
         options: {
+          host: process.env.INVENTORY_SERVICE_HOST ?? 'localhost',
           port: 3004,
         },
       },
@@ -47,6 +51,7 @@ import { AdminModule } from './admin/admin.module';
         name: 'TRANSACTION',
         transport: Transport.TCP,
         options: {
+          host: process.env.TRANSACTION_SERVICE_HOST ?? 'localhost',
           port: 3005,
         },
       },
