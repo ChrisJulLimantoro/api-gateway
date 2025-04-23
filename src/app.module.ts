@@ -15,7 +15,7 @@ import { AdminModule } from './admin/admin.module';
         name: 'AUTH',
         transport: Transport.TCP,
         options: {
-          port: 3000,
+          port: 3001,
         },
       },
 
@@ -23,7 +23,7 @@ import { AdminModule } from './admin/admin.module';
         name: 'MASTER',
         transport: Transport.TCP,
         options: {
-          port: 3001,
+          port: 3002,
         },
       },
 
@@ -31,7 +31,7 @@ import { AdminModule } from './admin/admin.module';
         name: 'FINANCE',
         transport: Transport.TCP,
         options: {
-          port: 3002,
+          port: 3003,
         },
       },
 
@@ -39,7 +39,7 @@ import { AdminModule } from './admin/admin.module';
         name: 'INVENTORY',
         transport: Transport.TCP,
         options: {
-          port: 3003,
+          port: 3004,
         },
       },
 
@@ -47,63 +47,63 @@ import { AdminModule } from './admin/admin.module';
         name: 'TRANSACTION',
         transport: Transport.TCP,
         options: {
-          port: 3004,
+          port: 3005,
         },
       },
       {
-          name: 'MARKETPLACE_RMQ',
-          transport: Transport.RMQ,
-          options: {
-              urls: ['amqp://localhost:5672'],
-              queue: 'marketplace_service_queue',
-              queueOptions: {
-                  durable: true,
-              },
+        name: 'MARKETPLACE_RMQ',
+        transport: Transport.RMQ,
+        options: {
+          urls: ['amqp://localhost:5672'],
+          queue: 'marketplace_service_queue',
+          queueOptions: {
+            durable: true,
           },
+        },
       },
       {
-          name: 'INVENTORY_RMQ',
-          transport: Transport.RMQ,
-          options: {
-              urls: ['amqp://localhost:5672'],
-              queue: 'inventory_service_queue',
-              queueOptions: {
-                  durable: true,
-              },
+        name: 'INVENTORY_RMQ',
+        transport: Transport.RMQ,
+        options: {
+          urls: ['amqp://localhost:5672'],
+          queue: 'inventory_service_queue',
+          queueOptions: {
+            durable: true,
           },
+        },
       },
       {
-          name: 'TRANSACTION_RMQ',
-          transport: Transport.RMQ,
-          options: {
-              urls: ['amqp://localhost:5672'],
-              queue: 'transaction_service_queue',
-              queueOptions: {
-                  durable: true,
-              },
+        name: 'TRANSACTION_RMQ',
+        transport: Transport.RMQ,
+        options: {
+          urls: ['amqp://localhost:5672'],
+          queue: 'transaction_service_queue',
+          queueOptions: {
+            durable: true,
           },
+        },
       },
       {
-          name: 'FINANCE_RMQ',
-          transport: Transport.RMQ,
-          options: {
-              urls: ['amqp://localhost:5672'],
-              queue: 'finance_service_queue',
-              queueOptions: {
-                  durable: true,
-              },
+        name: 'FINANCE_RMQ',
+        transport: Transport.RMQ,
+        options: {
+          urls: ['amqp://localhost:5672'],
+          queue: 'finance_service_queue',
+          queueOptions: {
+            durable: true,
           },
+        },
       },
       {
-          name: 'AUTH_RMQ',
-          transport: Transport.RMQ,
-          options: {
-              urls: ['amqp://localhost:5672'],
-              queue: 'auth_service_queue',
-              queueOptions: {
-                  durable: true,
-              },
+        name: 'AUTH_RMQ',
+        transport: Transport.RMQ,
+        options: {
+          urls: ['amqp://localhost:5672'],
+          queue: 'auth_service_queue',
+          queueOptions: {
+            durable: true,
           },
+        },
       },
     ]),
     ConfigModule.forRoot({
