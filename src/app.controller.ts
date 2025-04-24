@@ -33,6 +33,8 @@ export class AppController {
     private readonly transactionRmqClient: ClientProxy,
     @Inject('FINANCE_RMQ') private readonly financeRmqClient: ClientProxy,
     @Inject('AUTH_RMQ') private readonly authRmqClient: ClientProxy,
+    @Inject('MARKETPLACE_RMQ')
+    private readonly marketplaceRmqClient: ClientProxy,
     private readonly service: AppService,
   ) {}
 
@@ -49,6 +51,7 @@ export class AppController {
     finance: this.financeRmqClient,
     inventory: this.inventoryRmqClient, // vv
     transaction: this.transactionRmqClient, // vv
+    marketplace: this.marketplaceRmqClient,
   };
 
   @Get('health')

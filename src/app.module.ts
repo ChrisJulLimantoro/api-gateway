@@ -60,7 +60,7 @@ import { AdminModule } from './admin/admin.module';
         transport: Transport.RMQ,
         options: {
           urls: ['amqp://localhost:5672'],
-          queue: 'marketplace_service_queue',
+          queue: 'marketplace_service_queue_1',
           queueOptions: {
             durable: true,
           },
