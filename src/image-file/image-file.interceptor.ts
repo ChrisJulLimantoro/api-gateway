@@ -1,7 +1,8 @@
-import { Injectable, ExecutionContext } from '@nestjs/common';
-import { diskStorage } from 'multer';
-import { FileInterceptor } from '@nestjs/platform-express';
+import * as fs from 'fs';
 import * as path from 'path';
+import { Injectable } from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { diskStorage } from 'multer';
 import { randomUUID } from 'crypto';
 
 @Injectable()
@@ -12,6 +13,10 @@ export class ImageFileInterceptor {
     return FileInterceptor('file', {
       storage: diskStorage({
         destination: (req, file, cb) => {
+          // Create folder if it doesn't exist
+          if (!fs.existsSync(destination)) {
+            fs.mkdirSync(destination, { recursive: true });
+          }
           cb(null, destination);
         },
         filename: (req, file, cb) => {
@@ -34,6 +39,6 @@ export class ImageFileInterceptor {
       product: 'uploads/product',
       payout: 'uploads/payout',
     };
-    return folderMapping[folder] || folderMapping.default;
+    return folderMapping[folder] || 'uploads/others';
   }
 }
