@@ -22,11 +22,20 @@ import { Console } from 'console';
 @Controller()
 export class AppController {
   constructor(
-    @Inject('AUTH') private readonly authClient: ClientProxy,
-    @Inject('MASTER') private readonly masterClient: ClientProxy,
-    @Inject('FINANCE') private readonly financeClient: ClientProxy,
-    @Inject('INVENTORY') private readonly inventoryClient: ClientProxy,
-    @Inject('TRANSACTION') private readonly transactionClient: ClientProxy,
+    @Inject('AUTH_WRITER') private readonly authWriterClient: ClientProxy,
+    @Inject('AUTH_READER') private readonly authReaderClient: ClientProxy,
+    @Inject('MASTER_WRITER') private readonly masterWriterClient: ClientProxy,
+    @Inject('MASTER_READER') private readonly masterReaderClient: ClientProxy,
+    @Inject('FINANCE_WRITER') private readonly financeWriterClient: ClientProxy,
+    @Inject('FINANCE_READER') private readonly financeReaderClient: ClientProxy,
+    @Inject('INVENTORY_WRITER')
+    private readonly inventoryWriterClient: ClientProxy,
+    @Inject('INVENTORY_READER')
+    private readonly inventoryReaderClient: ClientProxy,
+    @Inject('TRANSACTION_WRITER')
+    private readonly transactionWriterClient: ClientProxy,
+    @Inject('TRANSACTION_READER')
+    private readonly transactionReaderClient: ClientProxy,
 
     @Inject('INVENTORY_RMQ') private readonly inventoryRmqClient: ClientProxy,
     @Inject('TRANSACTION_RMQ')
@@ -39,11 +48,16 @@ export class AppController {
   ) {}
 
   private readonly routeServiceMap: Record<string, ClientProxy> = {
-    auth: this.authClient,
-    master: this.masterClient,
-    finance: this.financeClient,
-    inventory: this.inventoryClient,
-    transaction: this.transactionClient,
+    auth_writer: this.authWriterClient,
+    auth_reader: this.authReaderClient,
+    master_writer: this.masterWriterClient,
+    master_reader: this.masterReaderClient,
+    finance_writer: this.financeWriterClient,
+    finance_reader: this.financeReaderClient,
+    inventory_writer: this.inventoryWriterClient,
+    inventory_reader: this.inventoryReaderClient,
+    transaction_writer: this.transactionWriterClient,
+    transaction_reader: this.transactionReaderClient,
   };
 
   private readonly rmqServiceMap: Record<string, ClientProxy> = {
@@ -62,7 +76,7 @@ export class AppController {
   @Post('login')
   async login(@Body() body: any, @Res() res, @Req() req) {
     console.log('Print Login');
-    const response = await this.authClient
+    const response = await this.routeServiceMap['auth_reader']
       .send({ cmd: 'login' }, body)
       .toPromise();
     if (response.success) {
@@ -81,7 +95,7 @@ export class AppController {
 
   @Get('sync-feature')
   async syncFeature() {
-    const data = await this.routeServiceMap['auth']
+    const data = await this.routeServiceMap['auth_writer']
       .send({ cmd: 'sync_feature' }, {})
       .toPromise();
     return data;
@@ -95,7 +109,7 @@ export class AppController {
       body: {},
       method: 'POST',
     };
-    const response = await this.routeServiceMap['master']
+    const response = await this.routeServiceMap['master_reader']
       .send({ cmd: 'get:company' }, payload)
       .toPromise();
     if (response.success) {
@@ -126,7 +140,7 @@ export class AppController {
       body: {},
       method: 'POST',
     };
-    const response = await this.routeServiceMap['master']
+    const response = await this.routeServiceMap['master_reader']
       .send({ cmd: 'get:store' }, payload)
       .toPromise();
     if (response.success) {
@@ -172,7 +186,7 @@ export class AppController {
       }
 
       // Send request to transaction service
-      const filePath: string = await this.transactionClient
+      const filePath: string = await this.transactionWriterClient
         .send({ cmd: 'get:transaction-nota/*' }, { params: { id } })
         .toPromise();
 
@@ -207,7 +221,15 @@ export class AppController {
     const [_, service, action, id, subAction, subId, ...remainingPath] =
       urlSanitized.split('/');
     // Find the target service
-    const targetService = this.routeServiceMap[service];
+    const methodLower = method.toLowerCase();
+    const targetService =
+      this.routeServiceMap[
+        service.concat(
+          ['post', 'put', 'patch', 'delete'].find((m) => m === methodLower)
+            ? '_writer'
+            : '_reader',
+        )
+      ];
     if (!targetService) {
       return res
         .status(404)
@@ -217,7 +239,7 @@ export class AppController {
     // Construct the cmd and payload
     params.id = id;
     params.subId = subId;
-    const cmd = `${method.toLowerCase()}:${action.toLowerCase()}${id ? '/*' : ''}${subAction ? '/' + subAction.toLowerCase() : ''}${subId ? '/*' : ''}`;
+    const cmd = `${methodLower}:${action.toLowerCase()}${id ? '/*' : ''}${subAction ? '/' + subAction.toLowerCase() : ''}${subId ? '/*' : ''}`;
 
     const bodynew = { ...query, ...body };
     const payload = {

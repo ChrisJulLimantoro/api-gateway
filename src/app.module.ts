@@ -11,48 +11,98 @@ import { AdminModule } from './admin/admin.module';
 @Module({
   imports: [
     ClientsModule.register([
+      // FOR LOAD BALANCING OF AUTH SERVICE
       {
-        name: 'AUTH',
+        name: 'AUTH_WRITER',
         transport: Transport.TCP,
         options: {
           host: process.env.AUTH_SERVICE_HOST ?? 'localhost',
-          port: Number(process.env.AUTH_SERVICE_PORT ?? '3001'),
+          port: Number(process.env.AUTH_SERVICE_WRITER_PORT ?? '3001'),
         },
       },
 
       {
-        name: 'MASTER',
+        name: 'AUTH_READER',
+        transport: Transport.TCP,
+        options: {
+          host: process.env.AUTH_SERVICE_HOST ?? 'localhost',
+          port: Number(process.env.AUTH_SERVICE_READER_PORT ?? '3001'),
+        },
+      },
+
+      // FOR LOAD BALANCING OF MASTER SERVICE
+      {
+        name: 'MASTER_WRITER',
         transport: Transport.TCP,
         options: {
           host: process.env.MASTER_SERVICE_HOST ?? 'localhost',
-          port: Number(process.env.MASTER_SERVICE_PORT ?? '3002'),
+          port: Number(process.env.MASTER_SERVICE_WRITER_PORT ?? '3002'),
         },
       },
 
       {
-        name: 'FINANCE',
+        name: 'MASTER_READER',
+        transport: Transport.TCP,
+        options: {
+          host: process.env.MASTER_SERVICE_HOST ?? 'localhost',
+          port: Number(process.env.MASTER_SERVICE_READER_PORT ?? '3002'),
+        },
+      },
+
+      // FOR LOAD BALANCING OF FINANCE SERVICE
+      {
+        name: 'FINANCE_WRITER',
         transport: Transport.TCP,
         options: {
           host: process.env.FINANCE_SERVICE_HOST ?? 'localhost',
-          port: Number(process.env.FINANCE_SERVICE_PORT ?? '3003'),
+          port: Number(process.env.FINANCE_SERVICE_WRITER_PORT ?? '3003'),
         },
       },
 
       {
-        name: 'INVENTORY',
+        name: 'FINANCE_READER',
+        transport: Transport.TCP,
+        options: {
+          host: process.env.FINANCE_SERVICE_HOST ?? 'localhost',
+          port: Number(process.env.FINANCE_SERVICE_READER_PORT ?? '3003'),
+        },
+      },
+
+      // FOR LOAD BALANCING OF INVENTORY SERVICE
+      {
+        name: 'INVENTORY_WRITER',
         transport: Transport.TCP,
         options: {
           host: process.env.INVENTORY_SERVICE_HOST ?? 'localhost',
-          port: Number(process.env.INVENTORY_SERVICE_PORT ?? '3004'),
+          port: Number(process.env.INVENTORY_SERVICE_WRITER_PORT ?? '3004'),
         },
       },
 
       {
-        name: 'TRANSACTION',
+        name: 'INVENTORY_READER',
+        transport: Transport.TCP,
+        options: {
+          host: process.env.INVENTORY_SERVICE_HOST ?? 'localhost',
+          port: Number(process.env.INVENTORY_SERVICE_READER_PORT ?? '3004'),
+        },
+      },
+
+      // FOR LOAD BALANCING OF TRANSACTION SERVICE
+      {
+        name: 'TRANSACTION_WRITER',
         transport: Transport.TCP,
         options: {
           host: process.env.TRANSACTION_SERVICE_HOST ?? 'localhost',
-          port: Number(process.env.TRANSACTION_SERVICE_PORT ?? '3005'),
+          port: Number(process.env.TRANSACTION_SERVICE_WRITER_PORT ?? '3005'),
+        },
+      },
+
+      {
+        name: 'TRANSACTION_READER',
+        transport: Transport.TCP,
+        options: {
+          host: process.env.TRANSACTION_SERVICE_HOST ?? 'localhost',
+          port: Number(process.env.TRANSACTION_SERVICE_READER_PORT ?? '3005'),
         },
       },
       {

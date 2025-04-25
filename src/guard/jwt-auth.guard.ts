@@ -13,7 +13,7 @@ import { Request } from 'express';
 export class JwtAuthGuard implements CanActivate {
   constructor(
     private readonly jwtService: JwtService,
-    @Inject('AUTH') private readonly authClient: ClientProxy,
+    @Inject('AUTH_READER') private readonly authClient: ClientProxy,
   ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
