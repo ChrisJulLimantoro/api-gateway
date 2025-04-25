@@ -16,7 +16,7 @@ import { AdminModule } from './admin/admin.module';
         transport: Transport.TCP,
         options: {
           host: process.env.AUTH_SERVICE_HOST ?? 'localhost',
-          port: Number(process.env.AUTH_SERVICE_PORT) ?? 3001,
+          port: Number(process.env.AUTH_SERVICE_PORT ?? '3001'),
         },
       },
 
@@ -25,7 +25,7 @@ import { AdminModule } from './admin/admin.module';
         transport: Transport.TCP,
         options: {
           host: process.env.MASTER_SERVICE_HOST ?? 'localhost',
-          port: Number(process.env.MASTER_SERVICE_PORT) ?? 3002,
+          port: Number(process.env.MASTER_SERVICE_PORT ?? '3002'),
         },
       },
 
@@ -34,7 +34,7 @@ import { AdminModule } from './admin/admin.module';
         transport: Transport.TCP,
         options: {
           host: process.env.FINANCE_SERVICE_HOST ?? 'localhost',
-          port: Number(process.env.FINANCE_SERVICE_PORT) ?? 3003,
+          port: Number(process.env.FINANCE_SERVICE_PORT ?? '3003'),
         },
       },
 
@@ -43,7 +43,7 @@ import { AdminModule } from './admin/admin.module';
         transport: Transport.TCP,
         options: {
           host: process.env.INVENTORY_SERVICE_HOST ?? 'localhost',
-          port: Number(process.env.INVENTORY_SERVICE_PORT) ?? 3004,
+          port: Number(process.env.INVENTORY_SERVICE_PORT ?? '3004'),
         },
       },
 
@@ -52,7 +52,7 @@ import { AdminModule } from './admin/admin.module';
         transport: Transport.TCP,
         options: {
           host: process.env.TRANSACTION_SERVICE_HOST ?? 'localhost',
-          port: Number(process.env.TRANSACTION_SERVICE_PORT) ?? 3005,
+          port: Number(process.env.TRANSACTION_SERVICE_PORT ?? '3005'),
         },
       },
       {
