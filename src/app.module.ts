@@ -16,7 +16,7 @@ import { AdminModule } from './admin/admin.module';
         transport: Transport.TCP,
         options: {
           host: process.env.AUTH_SERVICE_HOST ?? 'localhost',
-          port: 3001,
+          port: Number(process.env.AUTH_SERVICE_PORT) ?? 3001,
         },
       },
 
@@ -25,7 +25,7 @@ import { AdminModule } from './admin/admin.module';
         transport: Transport.TCP,
         options: {
           host: process.env.MASTER_SERVICE_HOST ?? 'localhost',
-          port: 3002,
+          port: Number(process.env.MASTER_SERVICE_PORT) ?? 3002,
         },
       },
 
@@ -34,7 +34,7 @@ import { AdminModule } from './admin/admin.module';
         transport: Transport.TCP,
         options: {
           host: process.env.FINANCE_SERVICE_HOST ?? 'localhost',
-          port: 3003,
+          port: Number(process.env.FINANCE_SERVICE_PORT) ?? 3003,
         },
       },
 
@@ -43,7 +43,7 @@ import { AdminModule } from './admin/admin.module';
         transport: Transport.TCP,
         options: {
           host: process.env.INVENTORY_SERVICE_HOST ?? 'localhost',
-          port: 3004,
+          port: Number(process.env.INVENTORY_SERVICE_PORT) ?? 3004,
         },
       },
 
@@ -52,7 +52,7 @@ import { AdminModule } from './admin/admin.module';
         transport: Transport.TCP,
         options: {
           host: process.env.TRANSACTION_SERVICE_HOST ?? 'localhost',
-          port: 3005,
+          port: Number(process.env.TRANSACTION_SERVICE_PORT) ?? 3005,
         },
       },
       {
@@ -71,7 +71,7 @@ import { AdminModule } from './admin/admin.module';
         transport: Transport.RMQ,
         options: {
           urls: ['amqp://localhost:5672'],
-          queue: 'inventory_service_queue',
+          queue: 'inventory_service_queue_1',
           queueOptions: {
             durable: true,
           },
@@ -82,7 +82,7 @@ import { AdminModule } from './admin/admin.module';
         transport: Transport.RMQ,
         options: {
           urls: ['amqp://localhost:5672'],
-          queue: 'transaction_service_queue',
+          queue: 'transaction_service_queue_1',
           queueOptions: {
             durable: true,
           },
@@ -93,7 +93,7 @@ import { AdminModule } from './admin/admin.module';
         transport: Transport.RMQ,
         options: {
           urls: ['amqp://localhost:5672'],
-          queue: 'finance_service_queue',
+          queue: 'finance_service_queue_1',
           queueOptions: {
             durable: true,
           },
@@ -104,7 +104,7 @@ import { AdminModule } from './admin/admin.module';
         transport: Transport.RMQ,
         options: {
           urls: ['amqp://localhost:5672'],
-          queue: 'auth_service_queue',
+          queue: 'auth_service_queue_1',
           queueOptions: {
             durable: true,
           },
