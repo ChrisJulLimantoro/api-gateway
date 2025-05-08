@@ -1,13 +1,7 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { HttpExceptionFilter } from './http-exception/http-exception.filter';
 import { MicroserviceConnectionExceptionFilter } from './http-exception/microservice-connection-exception.filter';
 import * as express from 'express';
-import * as multer from 'multer';
-import { diskStorage } from 'multer';
-import { join } from 'path';
-import { randomUUID } from 'crypto';
-import { FileInterceptor } from '@nestjs/platform-express';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);

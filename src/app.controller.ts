@@ -95,6 +95,7 @@ export class AppController {
 
   @Get('sync-feature')
   async syncFeature() {
+    console.log('Sync Feature');
     const data = await this.routeServiceMap['auth_writer']
       .send({ cmd: 'sync_feature' }, {})
       .toPromise();

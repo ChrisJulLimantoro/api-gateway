@@ -5,6 +5,7 @@ import {
   HttpException,
   HttpStatus,
 } from '@nestjs/common';
+import { MulterError } from 'multer';
 
 @Catch(Error)
 export class MicroserviceConnectionExceptionFilter implements ExceptionFilter {
@@ -32,6 +33,13 @@ export class MicroserviceConnectionExceptionFilter implements ExceptionFilter {
       response.status(401).json({
         statusCode: 401,
         message: 'Token Expired',
+        timestamp: new Date().toISOString(),
+        path: request.url,
+      });
+    } else if (exception.message.includes('File too large')) {
+      response.status(413).json({
+        statusCode: 413,
+        message: 'File size exceeds the 2MB limit.',
         timestamp: new Date().toISOString(),
         path: request.url,
       });
