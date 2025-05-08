@@ -5,6 +5,7 @@ import {
   Get,
   Inject,
   NotFoundException,
+  Param,
   Post,
   Req,
   Res,
@@ -178,6 +179,7 @@ export class AppController {
     res.sendFile(filePath);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Get('nota/*')
   async getNota(@Req() req: Request, @Res() res: Response) {
     try {
@@ -210,6 +212,47 @@ export class AppController {
       res
         .status(500)
         .json({ message: 'Internal Server Error', error: error.message });
+    }
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('print-product-qr/*')
+  async printQRCode(@Req() req: Request, @Res() res: Response) {
+    console.log('Print QR Code', req.params);
+    try {
+      // Send request to inventory service and get the PDF buffer object
+      const pdfBuffer = await this.inventoryReaderClient
+        .send(
+          { cmd: 'get:print-product-qr/*' },
+          { params: { id: req.params[0] } },
+        )
+        .toPromise();
+
+      // Check if the response is a valid buffer object
+      if (
+        pdfBuffer &&
+        pdfBuffer.type === 'Buffer' &&
+        Array.isArray(pdfBuffer.data)
+      ) {
+        // Convert the pdfBuffer.data into a real Buffer
+        const buffer = Buffer.from(pdfBuffer.data);
+
+        // Ensure the buffer is valid
+        if (!Buffer.isBuffer(buffer)) {
+          throw new Error('Invalid PDF buffer received');
+        }
+
+        res.setHeader('Content-Type', 'application/pdf');
+        res.setHeader(
+          'Content-Disposition',
+          `attachment; filename=product_${req.params[0]}_qrcodes.pdf`,
+        );
+        res.send(buffer); // Send the correct buffer
+      } else {
+        throw new Error('Invalid PDF buffer format');
+      }
+    } catch (error) {
+      res.status(400).json({ message: error.message });
     }
   }
 
