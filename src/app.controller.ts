@@ -7,6 +7,7 @@ import {
   NotFoundException,
   Param,
   Post,
+  Query,
   Req,
   Res,
   UseGuards,
@@ -80,13 +81,54 @@ export class AppController {
     const response = await this.routeServiceMap['auth_reader']
       .send({ cmd: 'login' }, body)
       .toPromise();
-    if (response.success) {
+    if (response.success && response.statusCode !== 203) {
       const payload = response.data;
       const token = await this.service.generateToken(payload);
       payload['token'] = token;
       response.data = payload;
     }
     return res.status(response.statusCode).json(response);
+  }
+
+  @Get('verify-email')
+  async verifyEmail(@Query('token') token: string, @Res() res) {
+    try {
+      const response = await this.routeServiceMap['auth_reader']
+        .send({ cmd: 'verify-email' }, { token: token })
+        .toPromise();
+      if (response.success) {
+        const payload = response.data;
+        const token = await this.service.generateToken(payload);
+        payload['token'] = token;
+        response.data = payload;
+      }
+      return res.status(response.statusCode).json(response);
+    } catch (error) {
+      return res
+        .status(error.statusCode || 500)
+        .json(
+          CustomResponse.error(error.message, null, error.statusCode || 500),
+        );
+    }
+  }
+
+  @Post('resend-verification')
+  async resendVerification(@Body() body: { user: string }, @Res() res) {
+    try {
+      const response = await this.routeServiceMap['auth_reader']
+        .send({ cmd: 'resend-verification' }, { user_id: body.user })
+        .toPromise();
+      if (response.success) {
+        return res.status(response.statusCode).json(response);
+      }
+    } catch (error) {
+      console.log(error);
+      return res
+        .status(error.statusCode || 500)
+        .json(
+          CustomResponse.error(error.message, null, error.statusCode || 500),
+        );
+    }
   }
 
   @Get('routes')
