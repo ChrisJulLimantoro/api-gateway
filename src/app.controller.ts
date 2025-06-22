@@ -346,7 +346,7 @@ export class AppController {
       return res
         .status(error.statusCode || 500)
         .json(
-          CustomResponse.error(error.message, null, error.statusCode || 500),
+          CustomResponse.error(error.message, error.errors, error.statusCode || 500),
         );
     }
   }
