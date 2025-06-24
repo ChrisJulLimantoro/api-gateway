@@ -222,7 +222,7 @@ export class AppController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Get('nota/*')
+  @Get('transaction/transaction-nota/*')
   async getNota(@Req() req: Request, @Res() res: Response) {
     try {
       const id = req.params[0]; // Extract ID from wildcard route
@@ -258,7 +258,7 @@ export class AppController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Get('print-product-qr/*')
+  @Get('inventory/print-product-qr/*')
   async printQRCode(@Req() req: Request, @Res() res: Response) {
     console.log('Print QR Code', req.params);
     try {
@@ -346,7 +346,11 @@ export class AppController {
       return res
         .status(error.statusCode || 500)
         .json(
-          CustomResponse.error(error.message, error.errors, error.statusCode || 500),
+          CustomResponse.error(
+            error.message,
+            error.errors,
+            error.statusCode || 500,
+          ),
         );
     }
   }

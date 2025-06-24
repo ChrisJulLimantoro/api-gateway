@@ -7,6 +7,7 @@ import { env } from 'process';
 import { ConfigModule } from '@nestjs/config';
 import { UploadModule } from './upload/upload.module';
 import { AdminModule } from './admin/admin.module';
+import { APP_FILTER } from '@nestjs/core';
 
 @Module({
   imports: [
