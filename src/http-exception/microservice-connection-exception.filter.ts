@@ -24,7 +24,7 @@ export class MicroserviceConnectionExceptionFilter implements ExceptionFilter {
       });
     } else if (exception.message.includes('Forbidden resource')) {
       response.status(HttpStatus.SERVICE_UNAVAILABLE).json({
-        statusCode: HttpStatus.SERVICE_UNAVAILABLE,
+        statusCode: HttpStatus.SERVICE_UNAVAILABLE, // include for 503
         message: 'You are Forbidden to access this resource.',
         timestamp: new Date().toISOString(),
         path: request.url,
@@ -47,7 +47,7 @@ export class MicroserviceConnectionExceptionFilter implements ExceptionFilter {
       // Handle other errors or rethrow the exception
       console.log('exception', exception);
       response.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
-        statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
+        statusCode: HttpStatus.INTERNAL_SERVER_ERROR, //include for 500 fallback
         message: 'An internal server error occurred.',
         timestamp: new Date().toISOString(),
         path: request.url,

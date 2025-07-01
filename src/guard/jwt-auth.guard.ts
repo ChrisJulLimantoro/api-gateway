@@ -1,6 +1,7 @@
 import {
   CanActivate,
   ExecutionContext,
+  ForbiddenException,
   Inject,
   Injectable,
   UnauthorizedException,
@@ -43,11 +44,10 @@ export class JwtAuthGuard implements CanActivate {
       return authorized.authorize;
     } catch (e) {
       if (e.name === 'TokenExpiredError') {
-        throw new UnauthorizedException('Token expired');
+        throw new UnauthorizedException('Token expired'); // 401 not logged in
       }
-      throw new UnauthorizedException('Unauthorized');
+      throw new ForbiddenException('Unauthorized'); // 403 not authorized
     }
-    return true;
   }
 
   private extractTokenFromHeader(request: Request): string | undefined {
